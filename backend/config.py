@@ -1,19 +1,17 @@
-from pydantic import BaseModel, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class AnalysisResult(BaseModel):
-    species: str
-    confidence: float = Field(ge=0, le=100)
-    summary: str
-    habitat: str
-    safety: str
-    outdoor_action: str
+class Settings(BaseSettings):
+    ollama_base_url: str = "http://localhost:11434"
+    ollama_model: str = "gemma3:4b"
+    database_path: str = "./ecotrail.db"
+    max_image_mb: int = 8
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+    )
 
 
-class ObservationCreate(AnalysisResult):
-    pass
-
-
-class Observation(ObservationCreate):
-    id: int
-    created_at: str
+settings = Settings()
